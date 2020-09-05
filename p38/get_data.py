@@ -3,7 +3,7 @@ import sqlite3
 from argparse import Namespace
 from typing import List, Tuple, Dict
 
-from db_utils import Domain, Group, db_sql
+from .db_utils import Domain, Group, db_sql
 
 DOMAIN_LIST_READ_STMT = "SELECT * FROM domainlist"
 GROUP_NAME_GET_STMT = "SELECT * FROM \"group\""

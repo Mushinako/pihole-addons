@@ -3,8 +3,8 @@ import argparse
 from sqlite3 import Connection
 from typing import Iterable, List
 
-from db_utils import open_gravity, db_sql_prepare_single, db_sql_prepare_multiple
-from get_data import CommonArgsDummy, filter_domains, get_group_names
+from .db_utils import open_gravity, db_sql_prepare_single, db_sql_prepare_multiple
+from .get_data import CommonArgsDummy, filter_domains, get_group_names
 
 GROUP_REMOVE_STMT = "DELETE FROM domainlist_by_group WHERE domainlist_id = ?"
 GROUP_INSERT_STMT = "INSERT INTO domainlist_by_group (domainlist_id, group_id) VALUES (?, ?)"
@@ -38,8 +38,11 @@ def update_db(conn: Connection, /, id_: int, groups: Iterable[int]) -> None:
     db_sql_prepare_multiple(conn, GROUP_INSERT_STMT, insert_parameters)
 
 
-def parse_args() -> UpdateGroupArgs:
+def parse_args(argv: List[str]) -> UpdateGroupArgs:
     """Parse command-line arguments
+
+    Arguments:
+        argv (list[str]): Args from command-line
 
     Returns:
         args (argparse.Namespace): Parsed arguments
@@ -68,15 +71,19 @@ def parse_args() -> UpdateGroupArgs:
         required=True,
         help="groups to add the domain to"
     )
-    args = parser.parse_args(namespace=UpdateGroupArgs())
+    args = parser.parse_args(argv, namespace=UpdateGroupArgs())
     if not args.b and not args.w:
         args.b = args.w = True
     return args
 
 
-def main() -> None:
-    """Main function for `update_group`"""
-    args = parse_args()
+def main(argv: List[str]) -> None:
+    """Main function for `update_group`
+
+    Arguments:
+        argv (list[str]): Args from command-line
+    """
+    args = parse_args(argv)
     with open_gravity() as conn:
         groups = get_group_names(conn)
         group_ids = set()
@@ -90,7 +97,3 @@ def main() -> None:
             return
         for domain in filtered_data:
             update_db(conn, domain.id_, group_ids)
-
-
-if __name__ == "__main__":
-    main()

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 
-from db_utils import open_gravity, db_sql_prepare_multiple
-from get_data import filter_domains
+from .db_utils import open_gravity, db_sql_prepare_multiple
+from .get_data import filter_domains
 
 DOMAIN_TOGGLE_STMT = "UPDATE domainlist SET enabled = ?, comment = ?, type = ? WHERE id = ?"
 
@@ -21,8 +21,11 @@ def update_db(conn, domains):
     db_sql_prepare_multiple(conn, DOMAIN_TOGGLE_STMT, update_parameters)
 
 
-def parse_args():
+def parse_args(argv):
     """Parse command-line arguments
+
+    Arguments:
+        argv (list[str]): Args from command-line
 
     Returns:
         args (argparse.Namespace): Parsed arguments
@@ -50,16 +53,20 @@ def parse_args():
         action="store_true",
         help="whitelist only"
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if not args.b and not args.w:
         args.b = args.w = True
     args.t = int(args.toggle in ("e", "enable"))
     return args
 
 
-def main():
-    """Main function for `toggle_domain`"""
-    args = parse_args()
+def main(argv):
+    """Main function for `toggle_domain`
+
+    Arguments:
+        argv (list[str]): Args from command-line
+    """
+    args = parse_args(argv)
     with open_gravity() as conn:
         filtered_data = filter_domains(conn, args)
         if not filtered_data:
@@ -68,7 +75,3 @@ def main():
             domain for domain in filtered_data if domain.enabled != args.t
         ]
         update_db(conn, domains_2_change)
-
-
-if __name__ == "__main__":
-    main()

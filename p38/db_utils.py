@@ -9,7 +9,7 @@ from typing import Iterable, Tuple
 INI_PATH = "/etc/pihole/pihole-FTL.conf"
 DB_PATH_KEY = "GRAVITYDB"
 DEFAULT_DB_PATH = "/etc/pihole/gravity.db"
-dummy_head = "DummyHead"
+DUMMY_HEAD = "DummyHead"
 
 
 class FakeIniHeader:
@@ -32,7 +32,7 @@ class FakeIniHeader:
     def __next__(self) -> str:
         if not self.head_read:
             self.head_read = True
-            return f"[{dummy_head}]\n"
+            return f"[{DUMMY_HEAD}]\n"
         line = self.file.readline()
         if not line:
             raise StopIteration
@@ -49,7 +49,7 @@ else:
         ini_file = iter(FakeIniHeader(f))
         config.read_file(ini_file)
     try:
-        DB_PATH = config.get(dummy_head, DB_PATH_KEY)
+        DB_PATH = config.get(DUMMY_HEAD, DB_PATH_KEY)
     except NoOptionError:
         DB_PATH = DEFAULT_DB_PATH
 

@@ -3,8 +3,8 @@ import argparse
 from sqlite3 import Connection
 from typing import Tuple, List
 
-from db_utils import Domain, open_gravity, db_sql_prepare_multiple
-from get_data import CommonArgsDummy, filter_domains
+from .db_utils import Domain, open_gravity, db_sql_prepare_multiple
+from .get_data import CommonArgsDummy, filter_domains
 
 DOMAIN_TOGGLE_STMT = "UPDATE domainlist SET enabled = ?, comment = ?, type = ? WHERE id = ?"
 
@@ -39,8 +39,11 @@ def update_db(conn: Connection, /, domains: List[Domain]) -> None:
     db_sql_prepare_multiple(conn, DOMAIN_TOGGLE_STMT, update_parameters)
 
 
-def parse_args() -> ToggleDomainArgs:
+def parse_args(argv: List[str]) -> ToggleDomainArgs:
     """Parse command-line arguments
+
+    Arguments:
+        argv (list[str]): Args from command-line
 
     Returns:
         args (argparse.Namespace): Parsed arguments
@@ -68,16 +71,20 @@ def parse_args() -> ToggleDomainArgs:
         action="store_true",
         help="whitelist only"
     )
-    args = parser.parse_args(namespace=ToggleDomainArgs())
+    args = parser.parse_args(argv, namespace=ToggleDomainArgs())
     if not args.b and not args.w:
         args.b = args.w = True
     args.t = int(args.toggle in ("e", "enable"))
     return args
 
 
-def main() -> None:
-    """Main function for `toggle_domain`"""
-    args = parse_args()
+def main(argv: List[str]) -> None:
+    """Main function for `toggle_domain`
+
+    Arguments:
+        argv (list[str]): Args from command-line
+    """
+    args = parse_args(argv)
     with open_gravity() as conn:
         filtered_data = filter_domains(conn, args)
         if not filtered_data:
@@ -86,7 +93,3 @@ def main() -> None:
             domain for domain in filtered_data if domain.enabled != args.t
         ]
         update_db(conn, domains_2_change)
-
-
-if __name__ == "__main__":
-    main()
