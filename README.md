@@ -6,7 +6,7 @@ Python versions under 3.5 are not tested and therefore not guaranteed to work.
 
 You may need to restart the DNS server after running these commands (`pihole restartdns`). These scripts aim to provide command-line tools functionalities not provided by `pihole`, and therefore restarting DNS is not included.
 
-**Always backup your `gravity.db` before using this script or you may risk losing data!!!**
+Note: **Always backup your `gravity.db` before using this script or you may risk losing data!!!**
 
 ## What's this for
 
@@ -52,6 +52,8 @@ python3 toggle_domain.py -w "(\.|^)google\.com$" t
 
 Toggle enable/disable for the whitelists and/or blacklists of domains in a group
 
+Note: **This will toggle ALL domains in this group, even if it may also be in another group!**
+
 #### `toggle_group.py` Help
 
 ```text
@@ -74,13 +76,13 @@ optional arguments:
 
 ```bash
 # Enable all whitelists and blacklists targeting group1
-python3 toggle_domain.py group1 e
+python3 toggle_group.py group1 e
 
 # Disable all blacklists targeting group2
-python3 toggle_domain.py -b group2 d
+python3 toggle_group.py -b group2 d
 
 # Invert all whitelists targeting group3
-python3 toggle_domain.py -w group3 t
+python3 toggle_group.py -w group3 t
 ```
 
 ### `update_group.py`
