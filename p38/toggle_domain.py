@@ -17,7 +17,7 @@ class ToggleDomainArgs(CommonArgsDummy):
         toggle (str) : Toggle to enable/disable
         b      (bool): Whether blacklists will be processed
         w      (bool): Whether whitelists will be processed
-        t      (int) : 1 for enable; 0 for disable
+        t      (int) : 1 for enable; 0 for disable; -1 for toggle
     """
 
     def __init__(self) -> None:
@@ -58,7 +58,7 @@ def parse_args(argv: List[str]) -> ToggleDomainArgs:
     )
     parser.add_argument(
         "toggle",
-        choices=("e", "d", "enable", "disable"),
+        choices=("e", "d", "t", "enable", "disable", "toggle"),
         help="enable/disable domain"
     )
     parser.add_argument(
@@ -74,7 +74,10 @@ def parse_args(argv: List[str]) -> ToggleDomainArgs:
     args = parser.parse_args(argv, namespace=ToggleDomainArgs())
     if not args.b and not args.w:
         args.b = args.w = True
-    args.t = int(args.toggle in ("e", "enable"))
+    if args.toggle in ("t", "toggle"):
+        args.t = -1
+    else:
+        args.t = int(args.toggle in ("e", "enable"))
     return args
 
 
@@ -89,7 +92,10 @@ def main(argv: List[str]) -> None:
         filtered_data = filter_domains(conn, args)
         if not filtered_data:
             return
-        domains_2_change = [
-            domain for domain in filtered_data if domain.enabled != args.t
-        ]
+        if args.t == -1:
+            domains_2_change = filtered_data
+        else:
+            domains_2_change = [
+                domain for domain in filtered_data if domain.enabled != args.t
+            ]
         update_db(conn, domains_2_change)
