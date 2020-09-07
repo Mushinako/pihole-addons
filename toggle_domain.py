@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Runs `toggle_domain` based on Python version"""
+
 import sys
 
 major, minor, _, _, _ = sys.version_info
@@ -8,10 +10,10 @@ if major < 3:
     sys.exit(23)
 if minor < 5:
     print("W: Python 3.4 and below are not tested. Errors may occur")
-if minor < 8:
+if minor < 7:
     from p35.toggle_domain import main
 else:
-    from p38.toggle_domain import main
+    from p37.toggle_domain import main
 
 
 def tmain() -> None:
