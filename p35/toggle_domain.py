@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+"""usage: toggle_domain.py [-h] [-b] [-w] domain {e,d,enable,disable}
+
+Toggle enable/disable for a domain whitelist/blacklist
+
+positional arguments:
+  domain                domain/regex to be toggled
+  {e,d,enable,disable}  enable/disable domain
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b                    blacklist only
+  -w                    whitelist only
+"""
+
 import argparse
 
 from .db_utils import open_gravity, db_sql_prepare_multiple
@@ -11,8 +25,8 @@ def update_db(conn, domains):
     """Do the update in database
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        domains           (list[Domain])      : List of `Domain` objects for each entry
+        conn    (sqlite3.Connection): Some connection to sqlite3 database
+        domains (list[Domain])      : List of `Domain` objects for each entry
     """
 
     update_parameters = [(

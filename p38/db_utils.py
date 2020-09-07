@@ -117,12 +117,12 @@ def open_gravity():
         conn.close()
 
 
-def db_sql(conn: sqlite3.Connection, /, sql: str) -> sqlite3.Cursor:
+def db_sql(conn: sqlite3.Connection, sql: str) -> sqlite3.Cursor:
     """Run SQL command without preparation
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        sql               (str)               : SQL command
+        conn (sqlite3.Connection): Some connection to sqlite3 database
+        sql  (str)               : SQL command
 
     Returns:
         cursor (sqlite3.Cursor): Cursor returned by SQL execution
@@ -133,13 +133,13 @@ def db_sql(conn: sqlite3.Connection, /, sql: str) -> sqlite3.Cursor:
     return cursor
 
 
-def db_sql_prepare_single(conn: sqlite3.Connection, /, sql: str, parameters: Iterable) -> sqlite3.Cursor:
+def db_sql_prepare_single(conn: sqlite3.Connection, sql: str, parameters: Iterable) -> sqlite3.Cursor:
     """Run SQL command with single command preparation
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        sql               (str)               : SQL command template
-        parameters        (Iterable)          : Parameters for the SQL command template
+        conn       (sqlite3.Connection): Some connection to sqlite3 database
+        sql        (str)               : SQL command template
+        parameters (Iterable)          : Parameters for the SQL command template
 
     Returns:
         cursor (sqlite3.Cursor): Cursor returned by SQL execution
@@ -150,13 +150,13 @@ def db_sql_prepare_single(conn: sqlite3.Connection, /, sql: str, parameters: Ite
     return cursor
 
 
-def db_sql_prepare_multiple(conn: sqlite3.Connection, /, sql: str, parameters: Iterable[Iterable]) -> sqlite3.Cursor:
+def db_sql_prepare_multiple(conn: sqlite3.Connection, sql: str, parameters: Iterable[Iterable]) -> sqlite3.Cursor:
     """Run similar SQL commands, each with command preparation
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        sql               (str)               : SQL command template
-        parameters        (Iterable[Iterable]): List of parameters for the SQL command template
+        conn       (sqlite3.Connection): Some connection to sqlite3 database
+        sql        (str)               : SQL command template
+        parameters (Iterable[Iterable]): List of parameters for the SQL command template
 
     Returns:
         cursor (sqlite3.Cursor): Cursor returned by SQL execution

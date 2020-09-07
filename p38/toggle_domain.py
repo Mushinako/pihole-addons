@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+"""usage: toggle_domain.py [-h] [-b] [-w] domain {e,d,enable,disable}
+
+Toggle enable/disable for a domain whitelist/blacklist
+
+positional arguments:
+  domain                domain/regex to be toggled
+  {e,d,enable,disable}  enable/disable domain
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b                    blacklist only
+  -w                    whitelist only
+"""
+
 import argparse
 from sqlite3 import Connection
 from typing import Tuple, List
@@ -25,12 +39,12 @@ class ToggleDomainArgs(CommonArgsDummy):
         self.t: int
 
 
-def update_db(conn: Connection, /, domains: List[Domain]) -> None:
+def update_db(conn: Connection, domains: List[Domain]) -> None:
     """Do the update in database
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        domains           (list[Domain])      : List of `Domain` objects for each entry
+        conn    (sqlite3.Connection): Some connection to sqlite3 database
+        domains (list[Domain])      : List of `Domain` objects for each entry
     """
 
     update_parameters: Tuple[int, str, int, int] = [(

@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+"""usage: update_group.py [-h] [-b] [-w] -g G [G ...] domain
+
+Update group configuration for a domain whitelist/blacklist
+
+positional arguments:
+  domain        domain/regex to be assigned to the group(s)
+
+optional arguments:
+  -h, --help    show this help message and exit
+  -b            blacklist only
+  -w            whitelist only
+  -g G [G ...]  groups to add the domain to
+"""
+
 import argparse
 
 from .db_utils import open_gravity, db_sql_prepare_single, db_sql_prepare_multiple
@@ -12,9 +26,9 @@ def update_db(conn, id_, groups):
     """Do the update in database
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        id_               (int)               : ID of whitelist/blacklist entry
-        domains           (Iterable[int])     : List of group IDs to which the entry is moved
+        conn    (sqlite3.Connection): Some connection to sqlite3 database
+        id_     (int)               : ID of whitelist/blacklist entry
+        domains (Iterable[int])     : List of group IDs to which the entry is moved
     """
 
     db_sql_prepare_single(conn, GROUP_REMOVE_STMT, (id_,))

@@ -130,9 +130,9 @@ def db_sql_prepare_single(conn, sql, parameters):
     """Run SQL command with single command preparation
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        sql               (str)               : SQL command template
-        parameters        (Iterable)          : Parameters for the SQL command template
+        conn       (sqlite3.Connection): Some connection to sqlite3 database
+        sql        (str)               : SQL command template
+        parameters (Iterable)          : Parameters for the SQL command template
 
     Returns:
         cursor (sqlite3.Cursor): Cursor returned by SQL execution
@@ -147,9 +147,9 @@ def db_sql_prepare_multiple(conn, sql, parameters):
     """Run similar SQL commands, each with command preparation
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        sql               (str)               : SQL command template
-        parameters        (Iterable[Iterable]): List of parameters for the SQL command template
+        conn       (sqlite3.Connection): Some connection to sqlite3 database
+        sql        (str)               : SQL command template
+        parameters (Iterable[Iterable]): List of parameters for the SQL command template
 
     Returns:
         cursor (sqlite3.Cursor): Cursor returned by SQL execution

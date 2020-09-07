@@ -24,11 +24,11 @@ class CommonArgsDummy(Namespace):
         self.w: bool
 
 
-def read_domains(conn: sqlite3.Connection, /) -> List[Domain]:
+def read_domains(conn: sqlite3.Connection) -> List[Domain]:
     """Read all blacklist and whitelist entries
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
+        conn (sqlite3.Connection): Some connection to sqlite3 database
 
     Returns:
         time_removed (list[Domain]): List of `Domain` objects for each entry
@@ -42,12 +42,12 @@ def read_domains(conn: sqlite3.Connection, /) -> List[Domain]:
     return time_removed
 
 
-def filter_domains(conn: sqlite3.Connection, /, args: CommonArgsDummy) -> List[Domain]:
+def filter_domains(conn: sqlite3.Connection, args: CommonArgsDummy) -> List[Domain]:
     """Get all blacklist and whitelist entries corresponding to the command-line arguments
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        args              (argparse.Namespace): `argparse` result
+        conn (sqlite3.Connection): Some connection to sqlite3 database
+        args (argparse.Namespace): `argparse` result
 
     Returns:
         filtered_data (list[Domain]): List of `Domain` objects for each matching entry
@@ -79,11 +79,11 @@ def filter_domains(conn: sqlite3.Connection, /, args: CommonArgsDummy) -> List[D
     return filtered_data
 
 
-def read_groups(conn: sqlite3.Connection, /) -> List[Group]:
+def read_groups(conn: sqlite3.Connection) -> List[Group]:
     """Get all group entries
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
+        conn (sqlite3.Connection): Some connection to sqlite3 database
 
     Returns:
         time_removed (list[Group]): List of `Group` objects for each entry
@@ -95,11 +95,11 @@ def read_groups(conn: sqlite3.Connection, /) -> List[Group]:
     return time_removed
 
 
-def get_group_names(conn: sqlite3.Connection, /) -> Dict[str, int]:
+def get_group_names(conn: sqlite3.Connection) -> Dict[str, int]:
     """Get all group entry names
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
+        conn (sqlite3.Connection): Some connection to sqlite3 database
 
     Returns:
         group_names (dict[str, int]): Dictionary mapping group name to group id

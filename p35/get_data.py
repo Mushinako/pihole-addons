@@ -25,8 +25,8 @@ def filter_domains(conn, args):
     """Get all blacklist and whitelist entries corresponding to the command-line arguments
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
-        args              (argparse.Namespace): `argparse` result
+        conn (sqlite3.Connection): Some connection to sqlite3 database
+        args (argparse.Namespace): `argparse` result
 
     Returns:
         filtered_data (list[Domain]): List of `Domain` objects for each matching entry
@@ -62,7 +62,7 @@ def read_groups(conn):
     """Get all group entries
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
+        conn (sqlite3.Connection): Some connection to sqlite3 database
 
     Returns:
         time_removed (list[Group]): List of `Group` objects for each entry
@@ -78,7 +78,7 @@ def get_group_names(conn):
     """Get all group entry names
 
     Arguments:
-        conn [Positional] (sqlite3.Connection): Some connection to sqlite3 database
+        conn (sqlite3.Connection): Some connection to sqlite3 database
 
     Returns:
         group_names (dict[str, int]): Dictionary mapping group name to group id
