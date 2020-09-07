@@ -18,13 +18,13 @@ from sqlite3 import Connection
 from typing import Iterable, List
 
 from .db_utils import open_gravity, db_sql_prepare_single, db_sql_prepare_multiple
-from .get_data import CommonArgsDummy, filter_domains, get_group_names
+from .get_data import DomainCommonArgsDummy, filter_domains_by_name, get_group_names
 
 GROUP_REMOVE_STMT = "DELETE FROM domainlist_by_group WHERE domainlist_id = ?"
 GROUP_INSERT_STMT = "INSERT INTO domainlist_by_group (domainlist_id, group_id) VALUES (?, ?)"
 
 
-class UpdateGroupArgs(CommonArgsDummy):
+class UpdateGroupArgs(DomainCommonArgsDummy):
     """Dummy class for argument object. Used only for type notation
 
     Properties:
@@ -106,7 +106,7 @@ def main(argv: List[str]) -> None:
                 print(f"{g} is not a valid group name")
                 return
             group_ids.add(groups[g])
-        filtered_data = filter_domains(conn, args)
+        filtered_data = filter_domains_by_name(conn, args)
         if not filtered_data:
             return
         for domain in filtered_data:

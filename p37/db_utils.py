@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""sqlite3 database utility functions"""
+
 import sqlite3
 import os.path
 from io import TextIOWrapper

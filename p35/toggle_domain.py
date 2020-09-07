@@ -16,7 +16,7 @@ optional arguments:
 import argparse
 
 from .db_utils import open_gravity, db_sql_prepare_multiple
-from .get_data import filter_domains
+from .get_data import filter_domains_by_name
 
 DOMAIN_TOGGLE_STMT = "UPDATE domainlist SET enabled = ?, comment = ?, type = ? WHERE id = ?"
 
@@ -85,7 +85,7 @@ def main(argv):
     """
     args = parse_args(argv)
     with open_gravity() as conn:
-        filtered_data = filter_domains(conn, args)
+        filtered_data = filter_domains_by_name(conn, args)
         if not filtered_data:
             return
         if args.t == -1:

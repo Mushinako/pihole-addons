@@ -43,6 +43,44 @@ python3 toggle_domain.py "www.google.com" e
 
 # Disable all blacklists targeting regex "(\.|^)google\.com$"
 python3 toggle_domain.py -b "(\.|^)google\.com$" d
+
+# Invert all whitelists targeting regex "(\.|^)google\.com$"
+python3 toggle_domain.py -w "(\.|^)google\.com$" t
+```
+
+### `toggle_group.py`
+
+Toggle enable/disable for the whitelists and/or blacklists of domains in a group
+
+#### `toggle_group.py` Help
+
+```text
+usage: toggle_group.py [-h] [-b] [-w] group {e,d,t,enable,disable,toggle}
+
+Toggle enable/disable for domain whitelists/blacklists in a group
+
+positional arguments:
+  group                 group to be toggled
+  {e,d,t,enable,disable,toggle}
+                        enable/disable domains in the group
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b                    blacklist only
+  -w                    whitelist only
+```
+
+#### `toggle_group.py` Example
+
+```bash
+# Enable all whitelists and blacklists targeting group1
+python3 toggle_domain.py group1 e
+
+# Disable all blacklists targeting group2
+python3 toggle_domain.py -b group2 d
+
+# Invert all whitelists targeting group3
+python3 toggle_domain.py -w group3 t
 ```
 
 ### `update_group.py`

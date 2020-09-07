@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""usage: toggle_domain.py [-h] [-b] [-w] domain {e,d,enable,disable}
+"""usage: toggle_group.py [-h] [-b] [-w] group {e,d,t,enable,disable,toggle}
 
-Toggle enable/disable for a domain whitelist/blacklist
+Toggle enable/disable for domain whitelists/blacklists in a group
 
 positional arguments:
-  domain                domain/regex to be toggled
-  {e,d,enable,disable}  enable/disable domain
+  group                 group to be toggled
+  {e,d,t,enable,disable,toggle}
+                        enable/disable domains in the group
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -15,19 +16,20 @@ optional arguments:
 
 import argparse
 from sqlite3 import Connection
-from typing import Tuple, List
+from dataclasses import dataclass
+from typing import Tuple, List, Set
 
 from .db_utils import Domain, open_gravity, db_sql_prepare_multiple
-from .get_data import DomainCommonArgsDummy, filter_domains_by_name
+from .get_data import CommonArgsDummy, filter_domains_by_id, get_domain_ids_by_group_ids, get_group_names
 
 DOMAIN_TOGGLE_STMT = "UPDATE domainlist SET enabled = ?, comment = ?, type = ? WHERE id = ?"
 
 
-class ToggleDomainArgs(DomainCommonArgsDummy):
+class ToggleGroupArgs(CommonArgsDummy):
     """Dummy class for argument object. Used only for type notation
 
     Properties:
-        domain (str) : Domain/Regex name
+        group  (str) : Group name
         toggle (str) : Toggle to enable/disable
         b      (bool): Whether blacklists will be processed
         w      (bool): Whether whitelists will be processed
@@ -35,8 +37,23 @@ class ToggleDomainArgs(DomainCommonArgsDummy):
     """
 
     def __init__(self) -> None:
+        self.group: str
         self.toggle: str
         self.t: int
+
+
+@dataclass
+class FilterDomainByIDArgs:
+    """Args class for argument object for domain id processing
+
+    Properties:
+        ids_ (set[int]): Domain/Regex IDs
+        b    (bool)    : Whether blacklists will be processed
+        w    (bool)    : Whether whitelists will be processed
+    """
+    ids_: Set[int]
+    b: bool
+    w: bool
 
 
 def update_db(conn: Connection, domains: List[Domain]) -> None:
@@ -53,7 +70,7 @@ def update_db(conn: Connection, domains: List[Domain]) -> None:
     db_sql_prepare_multiple(conn, DOMAIN_TOGGLE_STMT, update_parameters)
 
 
-def parse_args(argv: List[str]) -> ToggleDomainArgs:
+def parse_args(argv: List[str]) -> ToggleGroupArgs:
     """Parse command-line arguments
 
     Arguments:
@@ -64,16 +81,16 @@ def parse_args(argv: List[str]) -> ToggleDomainArgs:
     """
 
     parser = argparse.ArgumentParser(
-        description="Toggle enable/disable for a domain whitelist/blacklist"
+        description="Toggle enable/disable for domain whitelists/blacklists in a group"
     )
     parser.add_argument(
-        "domain",
-        help="domain/regex to be toggled"
+        "group",
+        help="group to be toggled"
     )
     parser.add_argument(
         "toggle",
         choices=("e", "d", "t", "enable", "disable", "toggle"),
-        help="enable/disable domain"
+        help="enable/disable domains in the group"
     )
     parser.add_argument(
         "-b",
@@ -85,7 +102,7 @@ def parse_args(argv: List[str]) -> ToggleDomainArgs:
         action="store_true",
         help="whitelist only"
     )
-    args = parser.parse_args(argv, namespace=ToggleDomainArgs())
+    args = parser.parse_args(argv, namespace=ToggleGroupArgs())
     if not args.b and not args.w:
         args.b = args.w = True
     if args.toggle in ("t", "toggle"):
@@ -103,7 +120,17 @@ def main(argv: List[str]) -> None:
     """
     args = parse_args(argv)
     with open_gravity() as conn:
-        filtered_data = filter_domains_by_name(conn, args)
+        groups = get_group_names(conn)
+        if args.group not in groups:
+            print(f"{args.group} is not a valid group name")
+            return
+        group_id = groups[args.group]
+        domain_ids = get_domain_ids_by_group_ids(conn, group_id)
+        if not domain_ids:
+            print(f"No domains are in group {args.group}")
+            return
+        new_args = FilterDomainByIDArgs(domain_ids, args.b, args.w)
+        filtered_data = filter_domains_by_id(conn, new_args)
         if not filtered_data:
             return
         if args.t == -1:
