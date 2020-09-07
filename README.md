@@ -2,7 +2,7 @@
 
 Some script addon to pihole console commands. Note that these need to be run with necessary permissions to edit `gravity.db` (default in `/etc/pihole/gravity.db`)
 
-~~Scripts in `p38` target Python version is 3.8. For 3.5-3.7 use `p35`.~~ Python versions are handled. Versions under 3.5 are not tested and therefore not guaranteed to work.
+Python versions under 3.5 are not tested and therefore not guaranteed to work.
 
 You may need to restart the DNS server after running these commands (`pihole restartdns`). These scripts aim to provide command-line tools functionalities not provided by `pihole`, and therefore restarting DNS is not included.
 
