@@ -105,11 +105,12 @@ def open_gravity():
         conn (sqlite3.Connection): The connection to `gravity.db`
     """
 
-    conn = sqlite3.connect(DB_PATH)
     try:
+        conn = sqlite3.connect(DB_PATH)
         yield conn
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
 
 def db_sql(conn, sql):
